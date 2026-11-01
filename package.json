@@ -1,1 +1,8 @@
-{"type":"module"}
+{
+  "name": "formalizatepe",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "npx http-server . -p 8080 -c-1"
+  }
+}

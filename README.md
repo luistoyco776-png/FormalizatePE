@@ -1,36 +1,34 @@
-# FormalízatePE · versión Supabase modular
+# FormalízatePE · versión completa integrada con Supabase
 
-Esta entrega parte de los archivos actuales `index(3).html` y `script(2).js` que compartiste, conserva el flujo y catálogo de etapas y separa responsabilidades en módulos ES.
+Esta versión reconstruye la interfaz original del prototipo: pantalla de acceso, sidebar de escritorio, navegación móvil, pestañas Mi Progreso / Bóveda de Documentos / Guías Oficiales, diagnóstico, tarjetas de etapas y modal guiado de tres fases.
 
-## Arquitectura
-- `src/config/supabaseClient.js`: configuración del cliente.
-- `src/data/appData.js`: preguntas, etapas, requisitos, estados y guías.
-- `src/state/appState.js`: estado de interfaz.
-- `src/utils/dom.js`: utilidades DOM.
-- `src/services/authService.js`: registro, login, sesión y logout.
-- `src/services/profileService.js`: lectura del perfil.
-- `src/services/progressService.js`: persistencia de figura legal, etapas y checklist.
-- `src/services/documentService.js`: carga de archivos y consulta de documentos privados.
-- `src/app.js`: coordinación de interfaz y eventos.
+## Estructura
 
-## Puesta en marcha
-1. Ejecuta `supabase-setup.sql` en Supabase SQL Editor.
-2. Verifica que ya estén creadas `profiles`, `etapas_usuario`, `requisitos_usuario` y el trigger `handle_new_user()` del esquema anterior.
-3. En Authentication → URL Configuration, registra tu URL local y la URL de despliegue.
-4. Abre la carpeta con VS Code y ejecuta `index.html` mediante Live Server. No uses `file://`.
-5. Registra una cuenta; si Supabase exige confirmación de correo, confirma el mensaje antes de iniciar sesión.
+- `index.html`, `styles.css`: interfaz y estilos originales.
+- `src/app.js`: coordinación de eventos y renderizado de la interfaz.
+- `src/data/appData.js`: contenido de preguntas, rutas, etapas y guías.
+- `src/state/appState.js`: estado de la aplicación y modo invitado/cuenta.
+- `src/config/supabaseClient.js`: cliente Supabase.
+- `src/services/`: autenticación, perfil, progreso y documentos.
+- `supabase-setup.sql`: tablas, RLS, trigger y bucket privado.
 
-## Funciones
-- Registro e inicio de sesión con Supabase Auth.
-- Restauración de sesión.
-- Modo invitado independiente, sin escrituras en Supabase.
-- Perfil, figura legal, estados de etapas y checklist persistentes.
-- Archivos PDF/JPG/PNG hasta 10 MB en bucket privado, con metadatos y enlaces firmados.
+## Configuración
 
-## Sprints sugeridos
-1. Sprint 1 – Acceso y perfil: Auth, sesión y datos del emprendimiento.
-2. Sprint 2 – Seguimiento: etapas, estados y checklist con RLS.
-3. Sprint 3 – Expediente: Storage privado, metadatos y recuperación de archivos.
-4. Sprint 4 – Validación: pruebas, accesibilidad, errores y despliegue.
+1. Ejecuta `supabase-setup.sql` completo en Supabase SQL Editor.
+2. Verifica en Authentication > URL Configuration que la URL local y la URL de despliegue estén autorizadas.
+3. Abre la carpeta con VS Code y usa Live Server o un servidor estático local. No abras el HTML con `file://`.
+4. Crea una cuenta desde el botón `Crear una cuenta`. Si Supabase requiere confirmación por correo, confirma y luego inicia sesión.
+5. También puedes entrar como invitado: ese modo es local y no escribe en Supabase.
 
-La publishable key se encuentra en `src/config/supabaseClient.js`. Es una clave pública para cliente; no añadas una `service_role key` al frontend. RLS debe permanecer habilitado.
+## Persistencia
+
+- Perfil: `profiles` (figura legal y respuestas del diagnóstico).
+- Etapas: `etapas_usuario`.
+- Checklist: `requisitos_usuario`.
+- Archivos: bucket privado `documentos` y metadatos en `documentos_usuario`.
+
+La publishable key está diseñada para el cliente web; RLS protege las filas y las políticas de Storage limitan el acceso a carpetas cuyo primer segmento es el UUID autenticado. Nunca publiques una `service_role` key.
+
+## Nota
+
+Los costos, plazos y requisitos mostrados son orientativos y deben verificarse con la entidad correspondiente. La aplicación no consulta el estado real de SUNARP, SUNAT ni municipalidades.

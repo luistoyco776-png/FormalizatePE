@@ -336,16 +336,3 @@ svg.lucide { width: 1rem; height: 1rem; flex-shrink: 0; }
   .modal-links { padding: 0 17px 18px; }
   .app-footer span:last-child { max-width: 420px; }
 }
-
-/* Ajustes de la pantalla actual de acceso y registro */
-.login-hero { background: radial-gradient(circle at 15% 15%, rgba(123,145,235,.28), transparent 34%), linear-gradient(145deg,#171f3a 0%,#202d51 56%,#293b70 100%); }
-.hero-orb { position:absolute; border:1px solid rgba(255,255,255,.12); border-radius:50%; pointer-events:none; }
-.orb-one { width:420px; height:420px; right:-170px; bottom:-190px; box-shadow:0 0 0 55px rgba(255,255,255,.025),0 0 0 110px rgba(255,255,255,.02); }
-.orb-two { width:220px; height:220px; right:12%; top:-120px; box-shadow:0 0 0 35px rgba(255,255,255,.025); }
-.field { display:block; width:100%; min-height:44px; border:1px solid #dce0e9; border-radius:9px; padding:10px 12px; color:#252b3b; background:#fff; font:inherit; font-size:.88rem; }
-.field:focus { outline:2px solid oklch(var(--ring) / .35); border-color:oklch(var(--ring)); }
-.guest-button { border:1px solid #cbd5f1; background:#f5f7ff; color:#293d7b; transition:background .15s,transform .15s; }
-.guest-button:hover { background:#ebefff; transform:translateY(-1px); }
-#full-name-wrap { display:block; }
-#full-name-wrap.hidden { display:none; }
-@media (max-width:1023px) { .login-hero { min-height:320px; } }
