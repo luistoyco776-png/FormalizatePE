@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8f9fc">
+  <meta name="description" content="Prototipo de orientación y seguimiento para la formalización de emprendimientos en Perú.">
+  <title>FormalízatePE · Formaliza tu emprendimiento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+        colors: {
+          brand: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',500:'#5965c9',600:'#4a55b5',700:'#3b4598',900:'#202747' },
+          ink:'#202747', canvas:'#f7f8fc', line:'#e5e7ef',
+          green:{50:'#eaf8f0',600:'#16804a',700:'#12683c'},
+          amber:{50:'#fff7e6',700:'#9a6700'}
+        }
+      }}
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body class="min-h-screen bg-canvas font-sans text-ink antialiased">
+  <!-- Acceso inicial -->
+  <section id="login-screen" class="min-h-screen">
+    <div class="grid min-h-screen lg:grid-cols-[1.05fr_.95fr]">
+      <aside class="login-hero relative hidden flex-col justify-between overflow-hidden p-10 text-white lg:flex xl:p-16">
+        <div class="relative z-10 flex items-center gap-3">
+          <span class="flex size-11 items-center justify-center rounded-xl bg-white/15"><i data-lucide="landmark" class="size-6"></i></span>
+          <span class="text-xl font-bold tracking-tight">Formalízate<span class="text-indigo-200">PE</span></span>
+        </div>
+        <div class="relative z-10 max-w-xl py-12">
+          <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider"><i data-lucide="shield-check" class="size-4"></i> Orientación empresarial</p>
+          <h1 class="text-4xl font-bold leading-tight xl:text-5xl">Da el siguiente paso con tu emprendimiento.</h1>
+          <p class="mt-5 max-w-lg leading-7 text-indigo-100">Organiza tus requisitos, consulta fuentes oficiales y lleva un seguimiento claro de las etapas de formalización.</p>
+          <div class="mt-9 grid max-w-lg grid-cols-3 gap-3">
+            <div class="rounded-xl border border-white/15 bg-white/10 p-4"><i data-lucide="route" class="size-5"></i><p class="mt-3 text-sm font-semibold">Ruta guiada</p></div>
+            <div class="rounded-xl border border-white/15 bg-white/10 p-4"><i data-lucide="folder-check" class="size-5"></i><p class="mt-3 text-sm font-semibold">Documentos</p></div>
+            <div class="rounded-xl border border-white/15 bg-white/10 p-4"><i data-lucide="chart-no-axes-combined" class="size-5"></i><p class="mt-3 text-sm font-semibold">Seguimiento</p></div>
+          </div>
+        </div>
+        <p class="relative z-10 text-xs text-indigo-100/80">Prototipo académico · Información y costos referenciales</p>
+        <div class="hero-orb orb-one"></div><div class="hero-orb orb-two"></div>
+      </aside>
+
+      <main class="flex items-center justify-center px-5 py-10 sm:px-8">
+        <div class="w-full max-w-md">
+          <div class="mb-8 flex items-center gap-3 lg:hidden">
+            <span class="flex size-10 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="landmark" class="size-5"></i></span>
+            <span class="text-xl font-bold">Formalízate<span class="text-brand-600">PE</span></span>
+          </div>
+          <div class="mb-8">
+            <p class="text-sm font-semibold text-brand-600">PLATAFORMA DE ORIENTACIÓN</p>
+            <h2 id="auth-title" class="mt-2 text-3xl font-bold tracking-tight">Bienvenido</h2>
+            <p class="mt-3 text-sm leading-6 text-slate-600">Plataforma de Formalización Empresarial del Perú: orientación paso a paso según normativas oficiales de PRODUCE, SUNARP y SUNAT.</p>
+          </div>
+          <form id="login-form" class="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm">
+            <div id="full-name-wrap" class="hidden"><label for="full-name" class="mb-1.5 block text-sm font-semibold">Nombre completo</label><input id="full-name" type="text" placeholder="Tu nombre" class="field"></div>
+            <div>
+              <label for="email" class="mb-1.5 block text-sm font-semibold">Correo electrónico</label>
+              <input id="email" type="email" autocomplete="username" placeholder="tu@correo.com" class="field" required>
+            </div>
+            <div>
+              <label for="password" class="mb-1.5 block text-sm font-semibold">Contraseña</label>
+              <input id="password" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" class="field" required>
+            </div>
+            <p id="login-message" class="hidden rounded-lg bg-amber-50 p-3 text-sm text-amber-700" role="status"></p>
+            <button id="auth-submit" type="submit" class="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white">Iniciar sesión</button>
+            <button id="auth-mode-toggle" type="button" class="w-full text-sm font-semibold text-brand-700">¿No tienes cuenta? Regístrate</button>
+            
+            <div class="flex items-center gap-3 py-1"><span class="h-px flex-1 bg-line"></span><span class="text-xs text-slate-400">O prueba la plataforma</span><span class="h-px flex-1 bg-line"></span></div>
+            <button id="guest-btn" type="button" class="guest-button flex min-h-12 w-full items-center justify-center gap-2 rounded-lg px-3 py-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">🚀 Ingresar como Invitado (Modo Prototipo / Demo)</button>
+            <p class="text-center text-xs leading-5 text-slate-500">Puedes crear una cuenta para guardar tu progreso o ingresar como invitado para probar la demostración.</p>
+          </form>
+          <div class="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-slate-500">
+            <span class="inline-flex items-center gap-1"><i data-lucide="landmark" class="size-3.5"></i> Gob.pe</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="building-2" class="size-3.5"></i> PRODUCE</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="file-check" class="size-3.5"></i> SUNARP</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="receipt" class="size-3.5"></i> SUNAT</span>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- Aplicación -->
+  <div id="app-shell" class="hidden min-h-screen">
+    <aside class="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-ink text-white lg:flex">
+      <div class="flex h-16 items-center gap-3 border-b border-white/10 px-6">
+        <span class="flex size-9 items-center justify-center rounded-lg bg-indigo-300 text-ink"><i data-lucide="landmark" class="size-5"></i></span>
+        <span class="text-base font-bold">Formalízate<span class="text-indigo-300">PE</span></span>
+      </div>
+      <nav class="flex-1 px-3 py-5" aria-label="Navegación principal">
+        <p class="px-3 pb-3 text-[11px] font-bold uppercase tracking-widest text-white/45">Mi emprendimiento</p>
+        <ul id="sidebar-nav" class="space-y-1"></ul>
+      </nav>
+      <div class="m-3 rounded-xl border border-white/10 bg-white/5 p-4">
+        <p class="text-sm font-semibold">Fuentes oficiales</p><p class="mt-1 text-xs leading-5 text-white/60">Consulta siempre las condiciones, costos y plazos vigentes en cada entidad.</p>
+      </div>
+    </aside>
+    <div class="lg:pl-64">
+      <header class="sticky top-0 z-20 flex min-h-16 items-center justify-between gap-3 border-b border-line bg-white/90 px-4 backdrop-blur md:px-8">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 lg:hidden"><i data-lucide="landmark" class="size-5"></i></span>
+          <div class="min-w-0"><p class="text-xs text-slate-500">Emprendimiento de demostración</p><h1 class="truncate text-sm font-bold sm:text-base"><span id="header-business">Mi Bodega Pro</span> <span id="figure-badge" class="ml-1 rounded-md bg-brand-50 px-2 py-1 text-xs font-semibold text-brand-700"></span></h1></div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="demo-chip" class="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-600">Invitado demo</span>
+          <div class="hidden text-right sm:block"><p id="header-user" class="text-sm font-semibold">Invitado demo</p><p id="header-mode" class="text-xs text-slate-500">Modo demostración</p></div>
+          <span id="header-avatar" class="flex size-9 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">ID</span>
+          <button id="logout-btn" class="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"><i data-lucide="log-out" class="size-4"></i><span class="hidden sm:inline">Cerrar sesión</span></button>
+        </div>
+      </header>
+      <nav class="sticky top-16 z-10 border-b border-line bg-white/95 px-3 py-2 backdrop-blur lg:hidden" aria-label="Navegación móvil"><ul id="mobile-nav" class="grid grid-cols-3 gap-1 rounded-lg bg-slate-100 p-1"></ul></nav>
+      <main class="mx-auto flex w-full max-w-7xl flex-col gap-7 px-4 py-6 md:px-8 md:py-8">
+        <section id="tab-progreso" data-tab-panel="progreso">
+          <div id="wizard"></div><div id="board" class="hidden"></div>
+        </section>
+        <section id="tab-boveda" data-tab-panel="boveda" class="hidden"></section>
+        <section id="tab-guias" data-tab-panel="guias" class="hidden"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal wizard -->
+  <div id="stage-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-overlay absolute inset-0 bg-slate-950/50 backdrop-blur-sm" data-close-modal aria-label="Cerrar ventana"></button>
+    <div class="relative flex min-h-full items-center justify-center p-3 sm:p-6">
+      <div class="modal-panel relative max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+        <button type="button" data-close-modal class="absolute right-4 top-4 z-20 flex size-9 items-center justify-center rounded-lg border border-line bg-white text-slate-500 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" aria-label="Cerrar"><i data-lucide="x" class="size-4"></i></button>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+</body>
+</html>
